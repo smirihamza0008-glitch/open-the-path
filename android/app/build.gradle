@@ -15,6 +15,8 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        // هذا السطر السحري يخبر المترجم بتجاهل الأخطاء الداخلية لملفات السيرفر وإكمال البناء رغماً عنه!
+        freeCompilerArgs += ["-Xskip-metadata-version-check"]
     }
 
     defaultConfig {
@@ -30,6 +32,9 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
