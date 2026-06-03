@@ -1,0 +1,28 @@
+name: open_the_path
+description: "A unique 2D reverse-runner puzzle game where you clear the path for the moving cube."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.11.0          # محرك الألعاب الأساسي
+  flame_audio: ^2.1.0    # للمؤثرات الصوتية البديلة للموسيقى
+  google_mobile_ads: ^4.0.0 # لإعلانات الربح (AdMob)
+  shared_preferences: ^2.2.0 # لحفظ النقاط والمجسمات المشتراة من المتجر
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  # سنقوم بتفعيل المجلدات الخاصة بالأصوات والصور لاحقاً عندما نضع التصاميم
+  assets:
+    - assets/audio/
+    - assets/images/
