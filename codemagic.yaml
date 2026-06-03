@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
-      flutter: stable
+      flutter: 3.19.6 # هذا الإصدار المستقر يحل مشكلة الـ Kotlin تماماً في السيرفر
       xcode: latest
     triggering:
       events:
@@ -12,34 +12,21 @@ workflows:
       branch_patterns:
         - target: main
     scripts:
-      - name: Force Clean and Prepare Android
+      - name: Set up local.properties
         script: |
-          # تنظيف الكاش المحلي داخل المشروع فوراً لمنع التعديلات التلقائية
-          flutter clean
-          
-          # إجبار النظام على تفعيل AndroidX يدوياً قبل بدء عملية التجميع
-          echo "android.useAndroidX=true" > android/gradle.properties
-          echo "android.enableJetifier=true" >> android/gradle.properties
-          echo "org.gradle.jvmargs=-Xmx4g" >> android/gradle.properties
-          
-          # إنشاء ملف محلي لإخبار المنصة بمكان الـ SDK دون تدخل خارجي
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
-      
       - name: Get Flutter packages
         script: |
           flutter pub get
-          
       - name: Build Android APK
         script: |
-          # استخدام أمر بناء مباشر وصارم يمنع الـ Upgrader التلقائي للموقع من العمل
-          flutter build apk --release --no-pub
-          
+          flutter build apk --release
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/**/app-release.apk
     publishing:
       email:
         recipients:
-          - your_email@example.com # ضع إيميلك هنا لتستلم التطبيق فوراً
+          - your_email@example.com
         notify:
           success: true
           failure: true
