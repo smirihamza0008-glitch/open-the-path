@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flame/game.dart';
 import 'shop_screen.dart';
-// سنستدعي شاشة اللعبة لاحقاً هنا عندما ننشئها
+import '../game/open_the_path_game.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    // تحريك التوهج في الخلفية لإعطاء جمالية بصرية
+    // تحريك التوهج في الخلفية لإعطاء جمالية بصرية عصرية ومتجددة
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
@@ -28,14 +29,35 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     super.dispose();
   }
 
+  // دالة مخصصة لإظهار واجهة اللعبة وتشغيل المحرك عند بدء اللعب
+  void _startGame(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          body: GameWidget(
+            game: OpenThePathGame(
+              onGameOver: () {
+                // سيتم ربط نافذة الخسارة والإعلانات هنا في المرحلة القادمة
+                debugPrint("Game Over Triggered");
+              },
+              onLevelComplete: () {
+                // سيتم ربط الانتقال للمرحلة التالية هنا في المرحلة القادمة
+                debugPrint("Level Complete Triggered");
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Stack(
         children: [
-          // تأثير الخلفية المتوهجة (Cyberpunk Glow)
+          // تأثير الخلفية المتوهجة السيبرانية (Cyberpunk Glow) الممتعة للعين
           AnimatedBuilder(
             animation: _animationController,
             builder: (context, child) {
@@ -44,9 +66,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                   gradient: RadialGradient(
                     center: Alignment.center,
                     radius: 1.2 + (_animationController.value * 0.2),
-                    colors: [
-                      const Color(0xff14142b),
-                      const Color(0xff0a0a12),
+                    colors: const [
+                      Color(0xff14142b),
+                      Color(0xff0a0a12),
                     ],
                   ),
                 ),
@@ -54,12 +76,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
             },
           ),
           
-          // محتويات الشاشة الرئيسية
+          // محتويات الشاشة الرئيسية وعناصر التحكم
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // اسم اللعبة بتصميم النيون المشع
+                // اسم اللعبة بتصميم النيون المشع بالحروف الكبيرة المبتكرة
                 Text(
                   'OPEN THE PATH',
                   style: TextStyle(
@@ -90,17 +112,15 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                 ),
                 const SizedBox(height: 50),
                 
-                // زر بدء اللعب بتصميم مخصص
+                // زر بدء اللعب والرحلة التفاعلية
                 _buildMenuButton(
                   text: 'START JOURNEY',
                   color: const Color(0xff00ffcc),
-                  onPressed: () {
-                    // سينتقل لشاشة اللعبة لاحقاً
-                  },
+                  onPressed: () => _startGame(context),
                 ),
                 const SizedBox(height: 20),
                 
-                // زر المتجر
+                // زر الدخول لمتجر التطوير والتخصيص
                 _buildMenuButton(
                   text: 'CYBER SHOP',
                   color: const Color(0xffff007f),
@@ -119,7 +139,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     );
   }
 
-  // أداة بناء أزرار نيون مخصصة وممتعة بصرياً عند الضغط
+  // أداة بناء أزرار نيون مخصصة وممتعة بصرياً عند التفاعل
   Widget _buildMenuButton({
     required String text,
     required Color color,
@@ -150,7 +170,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
         onPressed: onPressed,
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
