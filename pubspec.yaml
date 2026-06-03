@@ -22,7 +22,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # سنقوم بتفعيل المجلدات الخاصة بالأصوات والصور لاحقاً عندما نضع التصاميم
   assets:
     - assets/audio/
     - assets/images/
