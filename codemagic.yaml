@@ -12,21 +12,34 @@ workflows:
       branch_patterns:
         - target: main
     scripts:
-      - name: Set up local.properties
+      - name: Force Clean and Prepare Android
         script: |
+          # تنظيف الكاش المحلي داخل المشروع فوراً لمنع التعديلات التلقائية
+          flutter clean
+          
+          # إجبار النظام على تفعيل AndroidX يدوياً قبل بدء عملية التجميع
+          echo "android.useAndroidX=true" > android/gradle.properties
+          echo "android.enableJetifier=true" >> android/gradle.properties
+          echo "org.gradle.jvmargs=-Xmx4g" >> android/gradle.properties
+          
+          # إنشاء ملف محلي لإخبار المنصة بمكان الـ SDK دون تدخل خارجي
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+      
       - name: Get Flutter packages
         script: |
           flutter pub get
+          
       - name: Build Android APK
         script: |
-          flutter build apk --release
+          # استخدام أمر بناء مباشر وصارم يمنع الـ Upgrader التلقائي للموقع من العمل
+          flutter build apk --release --no-pub
+          
     artifacts:
-      - build/app/outputs/flutter-apk/**/app-release.apk
+      - build/app/outputs/flutter-apk/app-release.apk
     publishing:
       email:
         recipients:
-          - your_email@example.com
+          - your_email@example.com # ضع إيميلك هنا لتستلم التطبيق فوراً
         notify:
           success: true
           failure: true
