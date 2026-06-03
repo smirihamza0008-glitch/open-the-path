@@ -1,10 +1,8 @@
 plugins {
     id "com.android.application"
-    id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
-
-// إضافة إعدادات Flutter القياسية يدوياً لضمان الربط السليم
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.smrihamza0008.openthepath"
@@ -34,8 +32,4 @@ android {
             shrinkResources false
         }
     }
-}
-
-flutter {
-    source '../..'
 }
