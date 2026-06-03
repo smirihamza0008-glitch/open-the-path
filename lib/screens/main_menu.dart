@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flame/game.dart';
 import 'shop_screen.dart';
-import '../game/open_the_path_game.dart';
+import 'game_play_screen.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    // تحريك التوهج في الخلفية لإعطاء جمالية بصرية عصرية ومتجددة
+    // تحريك التوهج في الخلفية لإعطاء جمالية بصرية عصرية ومتجددة تريح العين
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
@@ -29,25 +28,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     super.dispose();
   }
 
-  // دالة مخصصة لإظهار واجهة اللعبة وتشغيل المحرك عند بدء اللعب
+  // الدالة الكاملة والمسؤولة عن الانتقال لشاشة اللعب المتكاملة (GamePlayScreen)
   void _startGame(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Scaffold(
-          body: GameWidget(
-            game: OpenThePathGame(
-              onGameOver: () {
-                // سيتم ربط نافذة الخسارة والإعلانات هنا في المرحلة القادمة
-                debugPrint("Game Over Triggered");
-              },
-              onLevelComplete: () {
-                // سيتم ربط الانتقال للمرحلة التالية هنا في المرحلة القادمة
-                debugPrint("Level Complete Triggered");
-              },
-            ),
-          ),
-        ),
+        builder: (context) => const GamePlayScreen(),
       ),
     );
   }
@@ -57,7 +43,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     return Scaffold(
       body: Stack(
         children: [
-          // تأثير الخلفية المتوهجة السيبرانية (Cyberpunk Glow) الممتعة للعين
+          // تأثير الخلفية المتوهجة السيبرانية المتغيرة (Cyberpunk Glow) الممتعة للعين
           AnimatedBuilder(
             animation: _animationController,
             builder: (context, child) {
@@ -76,12 +62,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
             },
           ),
           
-          // محتويات الشاشة الرئيسية وعناصر التحكم
+          // محتويات الشاشة الرئيسية وعناصر التوجيه
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // اسم اللعبة بتصميم النيون المشع بالحروف الكبيرة المبتكرة
+                // اسم اللعبة بتصميم النيون المشع بالحروف الكبيرة: Open The Path
                 Text(
                   'OPEN THE PATH',
                   style: TextStyle(
@@ -112,7 +98,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                 ),
                 const SizedBox(height: 50),
                 
-                // زر بدء اللعب والرحلة التفاعلية
+                // زر بدء اللعب والرحلة التفاعلية المتصل بشاشة اللعب والإعلانات
                 _buildMenuButton(
                   text: 'START JOURNEY',
                   color: const Color(0xff00ffcc),
@@ -120,7 +106,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                 ),
                 const SizedBox(height: 20),
                 
-                // زر الدخول لمتجر التطوير والتخصيص
+                // زر الدخول لمتجر التطوير والتخصيص وشراء المجسمات الخلفية
                 _buildMenuButton(
                   text: 'CYBER SHOP',
                   color: const Color(0xffff007f),
@@ -139,7 +125,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     );
   }
 
-  // أداة بناء أزرار نيون مخصصة وممتعة بصرياً عند التفاعل
+  // أداة بناء أزرار نيون مخصصة وممتعة بصرياً للمستخدم عند النقر بالإصبع
   Widget _buildMenuButton({
     required String text,
     required Color color,
