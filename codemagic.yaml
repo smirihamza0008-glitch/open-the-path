@@ -1,10 +1,9 @@
 workflows:
   android-workflow:
-    name: Open The Path Optimized Android Build
+    name: Open The Path Fixed Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     environment:
-      # قمنا برفع الإصدار إلى 3.13.0 بدقة لتلبية شرط مكتبة Flame وتجنب أخطاء الإصدارات الأحدث
       flutter: 3.13.0
       xcode: latest
     triggering:
@@ -13,20 +12,16 @@ workflows:
       branch_patterns:
         - pattern: main
     scripts:
-      - name: Force Clear Cache & Clean Project
+      - name: Hard Clean Project
         script: |
-          rm -rf android/.gradle
-          rm -rf ~/.gradle/caches
           flutter clean
-      - name: Configure Java Environment & Local Properties
-        script: |
-          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
-          echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
+          rm -rf android/.gradle
+          find . -name "*.apk" -type f -delete
       - name: Fetch Flutter Dependencies
         script: |
           flutter pub get
       - name: Execute Autonomous Android Release Build
         script: |
-          flutter build apk --release --no-pub
+          flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
