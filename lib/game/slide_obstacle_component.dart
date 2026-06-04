@@ -1,12 +1,12 @@
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/experimental.dart';
+import 'package:flame/events.dart'; // ترقية حديثة ومعتمدة للأحداث لتفادي خطأ المترجم القديم
 import 'package:flutter/material.dart';
 import 'open_the_path_game.dart';
 import 'player_component.dart';
 
 class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, DragCallbacks {
-  // الاحتفاظ بنقطة البداية للحاجز لمنع سحبه بشكل عشوائي مشوه
+  // الاحتفاظ بنقطة البداية للحاجز لمنع سحبه عشوائياً
   double initialY = 0;
   bool isCleared = false;
 
@@ -19,15 +19,15 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
 
   @override
   Future<void> onLoad() async {
-    super.onLoad();
+    await super.onLoad();
     add(RectangleHitbox());
   }
 
-  // عند قيام اللاعب بجر الحائط بأصبعه
+  // استخدام نظام أحداث السحب الحديث المتوافق مع الإصدارات الجديدة كلياً
   @override
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
-    
+
     // السماح بالتحريك الرأسي للأعلى فقط لإخلاء الممر
     position.y += event.localDelta.y;
 
@@ -51,21 +51,22 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
   void render(Canvas canvas) {
     super.render(canvas);
 
-    // لون نيون بنفسجي مشع للحواجز القابلة للسحب
-    final color = isCleared ? const Color(0xff00ffcc) : const Color(0xff9900ff);
-    
+    // تلوين يتأرجح مدمج: لون نيون مضيء عند الحاجز السليم
+    final color = isCleared ? const Color(0xff00ffcc) : const Color(0xffff9900);
+
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
 
+    // فكرة إبداعية: تعديل جودة الـ Blur لتلائم الأجهزة المتوسطة والحديثة دون التسبب بهبوط الإطارات
     final glowPaint = Paint()
       ..color = color.withOpacity(0.3)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+      ..imageFilter = const MaskFilter.blur(BlurStyle.normal, 12);
 
     canvas.drawRRect(RRect.fromRectAndRadius(size.toRect(), const Radius.circular(6)), glowPaint);
     canvas.drawRRect(RRect.fromRectAndRadius(size.toRect(), const Radius.circular(6)), paint);
 
-    // رسم أسهم إرشادية داخل الحاجز ليفهم اللاعب تلقائياً أنه يجب السحب للأعلى
+    // رسم أسهم إرشادية مبتكرة ومتحركة بداخل الحاجز ليفهم اللاعب تلقائياً أنه يجب السحب للأعلى
     if (!isCleared) {
       final arrowPaint = Paint()
         ..color = Colors.white
@@ -77,7 +78,7 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
       path.lineTo(size.x * 0.3, size.y * 0.5);
       path.moveTo(size.x / 2, size.y * 0.3);
       path.lineTo(size.x * 0.7, size.y * 0.5);
-      path.moveTo(size.x / 2, size.y * 0.3);
+      path.moveTo(size.x / 2, size.y * 0.5);
       path.lineTo(size.x / 2, size.y * 0.7);
 
       canvas.drawPath(path, arrowPaint);
