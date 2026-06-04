@@ -1,38 +1,31 @@
-package com.smrihamza0008.openthepath;
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.smrihamza0008.openthepath">
 
-import androidx.annotation.NonNull;
-import io.flutter.embedding.android.FlutterActivity;
-import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.plugin.common.MethodChannel;
-
-public class MainActivity extends FlutterActivity {
-    private static final String CHANNEL = "com.smrihamza0008.openthepath/path";
-
-    @Override
-    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
-        super.configureFlutterEngine(flutterEngine);
-
-        // تعديل طريقة الوصول للـ BinaryMessenger لتتوافق تماماً مع إصدار 3.13.0
-        new MethodChannel(flutterEngine.getDartExecutor(), CHANNEL)
-            .setMethodCallHandler(new MethodChannel.MethodCallHandler() {
-                @Override
-                public void onMethodCall(@NonNull io.flutter.plugin.common.MethodCall call, @NonNull MethodChannel.Result result) {
-                    if (call.method.equals("checkPath")) {
-                        Object pathArgument = call.argument("path");
-                        Object paramArgument = call.argument("param");
-
-                        String targetPath = (pathArgument != null) ? pathArgument.toString() : "";
-                        String param = (paramArgument != null) ? paramArgument.toString() : "";
-
-                        if (!targetPath.isEmpty()) {
-                            result.success(true);
-                        } else {
-                            result.error("INVALID_PATH", "Path cannot be empty", null);
-                        }
-                    } else {
-                        result.notImplemented();
-                    }
-                }
-            });
-    }
-}
+    <application
+        android:label="Open The Path"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher">
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboardSize|screenSize|smallestScreenSize|screenLayout|density|locale|layoutDirection|fontScale|screenRound|chime">
+            
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+                
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+</manifest>
