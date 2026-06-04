@@ -21,6 +21,6 @@ workflows:
           flutter pub get
       - name: Execute Autonomous Android Release Build
         script: |
-          flutter build apk --release --no-shrink
+          flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
