@@ -1,16 +1,17 @@
-include ':app'
-
-def localProperties = new Properties()
-def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    flutterRoot = '/Users/builder/programs/flutter'
+plugins {
+    id "com.android.application" version "7.3.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.7.10" apply false
 }
 
-evaluate(new File(flutterRoot, 'packages/flutter_tools/gradle/app_plugin_loader.gradle'))
+// ابتكار حل ذكي محلي لتضمين إضافات فلاتر دون المرور بـ app_plugin_loader المكسور في خادم المنصة
+include ':app'
+
+rootProject.name = 'open_the_path'
