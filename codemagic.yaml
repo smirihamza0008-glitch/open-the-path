@@ -26,7 +26,6 @@ workflows:
           flutter pub get
       - name: Execute Autonomous Android Release Build
         script: |
-          cd android
-          ./gradlew assembleRelease --no-daemon
+          flutter build apk --release --no-pub
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
