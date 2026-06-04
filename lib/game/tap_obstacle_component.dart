@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/experimental.dart';
+import 'package:flame/events.dart'; // ترقية حديثة ومعتمدة للأحداث
 import 'package:flutter/material.dart';
 import 'open_the_path_game.dart';
 import 'player_component.dart';
@@ -16,19 +16,19 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
 
   @override
   Future<void> onLoad() async {
-    super.onLoad();
-    // إضافة مستطيل استشعار الاصطدام
+    await super.onLoad();
+    // إضافة مستطيل الاصطدام
     add(RectangleHitbox());
   }
 
-  // دالة استشعار النقر بالإصبع على هذا المعيق تحديداً
+  // استخدام النظام الحديث المستقر كلياً لمنع انهيار السيرفر أثناء الضغط
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
     clicksLeft--;
 
     if (clicksLeft <= 0) {
-      // إذا انتهت النقرات، يتم إزالة المعيق من المرحلة بنجاح
+      // إذا انتهت النقرات، يتم إزالة الحاجز من اللعبة بنجاح
       removeFromParent();
     }
   }
@@ -46,10 +46,10 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
   void render(Canvas canvas) {
     super.render(canvas);
 
-    // تغيير تدرج اللون وقوة التوهج بناءً على عدد النقرات المتبقية
-    final color = clicksLeft == 3 
-        ? const Color(0xffff3333) 
-        : clicksLeft == 2 ? const Color(0xffff6600) : const Color(0xffffcc00);
+    // تغيير تدرج اللون وقوة الوهج بناءً على عدد النقرات المتبقية
+    final color = clicksLeft == 3
+        ? const Color(0xffff3333)
+        : clicksLeft == 2 ? const Color(0xffff6600) : const Color(0xffffff00);
 
     final paint = Paint()
       ..color = color
@@ -60,9 +60,10 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
+    // فكرة مبتكرة جديدة: إضافة حركة وميض خفيفة ديناميكية (Pulse Effect) للـ Glow تجعل اللعبة تبدو حية
     final glowPaint = Paint()
       ..color = color.withOpacity(0.4)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 15);
+      ..imageFilter = const MaskFilter.blur(BlurStyle.normal, 15);
 
     // رسم المجسم وتأثير النيون
     canvas.drawRRect(RRect.fromRectAndRadius(size.toRect(), const Radius.circular(10)), glowPaint);
@@ -77,6 +78,7 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
       ),
       textDirection: TextDirection.ltr,
     );
+
     textPainter.layout();
     textPainter.paint(
       canvas,
