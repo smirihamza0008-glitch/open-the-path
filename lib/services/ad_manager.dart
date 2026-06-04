@@ -54,7 +54,7 @@ class AdManager {
   }
 
   // عرض إعلان المكافأة
-  void showRewarded(Function(RewardItem) onRewardEarned, VoidCallback onAdClosed) {
+    void showRewarded(Function(RewardItem) onRewardEarned, VoidCallback onAdClosed) {
     if (_rewardedAd != null) {
       _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
@@ -64,14 +64,19 @@ class AdManager {
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
           ad.dispose();
+          loadRewarded();
+          onRewardEarned(RewardItem(1, 'continue'));
           onAdClosed();
         },
       );
-      _rewardedAd!.show(onUserEarnedReward: onRewardEarned);
+
+      _rewardedAd!.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        onRewardEarned(reward);
+      });
     } else {
-      // إذا لم يتوفر الإعلان لأي سبب، نتيح له الإكمال مجاناً كي لا يغضب اللاعب
       onRewardEarned(RewardItem(1, 'continue'));
       onAdClosed();
     }
   }
+
 }
