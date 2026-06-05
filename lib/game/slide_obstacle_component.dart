@@ -1,12 +1,12 @@
 import 'dart:ui' as ui;
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/input.dart';
+import 'package:flame/events.dart'; // حزمة الأحداث الحديثة المطلوبة سحابياً
 import 'package:flutter/material.dart';
 import 'open_the_path_game.dart';
 import 'player_component.dart';
 
-class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, Draggable {
+class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, DragCallbacks {
   double initialY = 0;
   bool isCleared = false;
 
@@ -23,16 +23,16 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
     add(RectangleHitbox());
   }
 
-  // معالج السحب القياسي المتوافق والمجرب على إصدارات فلاتر المستقرة
+  // استخدام نظام السحب والإزاحة الجديد المتوافق مع بيئة البناء الحالية
   @override
-  bool onDragUpdate(DragUpdateInfo info) {
-    position.y += info.delta.game.y;
+  void onDragUpdate(DragUpdateEvent event) {
+    position.y += event.localDelta.y;
 
     if (position.y < initialY - size.y * 1.2) {
       position.y = initialY - size.y * 1.2;
       isCleared = true;
     }
-    return true;
+    event.handled = true;
   }
 
   @override
