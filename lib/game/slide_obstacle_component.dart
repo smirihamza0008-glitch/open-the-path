@@ -1,12 +1,12 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/input.dart';
-import 'package:flutter/material.dart' hide ImageFilter;
+import 'package:flame/events.dart';
+import 'package:flutter/material.dart';
 import 'open_the_path_game.dart';
 import 'player_component.dart';
 
-class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, Draggable {
+class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, DragCallbacks {
   double initialY = 0;
   bool isCleared = false;
 
@@ -24,14 +24,14 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
   }
 
   @override
-  bool onDragUpdate(DragUpdateInfo info) {
-    position.y += info.delta.game.y;
+  void onDragUpdate(DragUpdateEvent event) {
+    position.y += event.localDelta.y;
 
     if (position.y < initialY - size.y * 1.2) {
       position.y = initialY - size.y * 1.2;
       isCleared = true;
     }
-    return true;
+    event.handled = true;
   }
 
   @override
@@ -54,7 +54,7 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
 
     final glowPaint = Paint()
       ..color = color.withOpacity(0.3)
-      ..imageFilter = ImageFilter.blur(sigmaX: 12, sigmaY: 12);
+      ..imageFilter = ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12);
 
     canvas.drawRRect(RRect.fromRectAndRadius(size.toRect(), const Radius.circular(6)), glowPaint);
     canvas.drawRRect(RRect.fromRectAndRadius(size.toRect(), const Radius.circular(6)), paint);
