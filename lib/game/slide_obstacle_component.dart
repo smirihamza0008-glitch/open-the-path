@@ -1,12 +1,12 @@
-import 'dart:ui'; // استيراد ضروري جداً لتشغيل مرشح النيون الحديث
+import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/events.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/material.dart' hide ImageFilter;
 import 'open_the_path_game.dart';
 import 'player_component.dart';
 
-class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, DragCallbacks {
+class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, Draggable {
   double initialY = 0;
   bool isCleared = false;
 
@@ -24,14 +24,14 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
   }
 
   @override
-  void onDragUpdate(DragUpdateEvent event) {
-    super.onDragUpdate(event);
-    position.y += event.localDelta.y;
+  bool onDragUpdate(DragUpdateInfo info) {
+    position.y += info.delta.game.y;
 
     if (position.y < initialY - size.y * 1.2) {
       position.y = initialY - size.y * 1.2;
       isCleared = true;
     }
+    return true;
   }
 
   @override
@@ -52,7 +52,6 @@ class SlideObstacleComponent extends PositionComponent with HasGameRef<OpenThePa
       ..color = color
       ..style = PaintingStyle.fill;
 
-    // الحل النهائي والذكي لفلتر النيون بدون أخطاء تجميع
     final glowPaint = Paint()
       ..color = color.withOpacity(0.3)
       ..imageFilter = ImageFilter.blur(sigmaX: 12, sigmaY: 12);
