@@ -1,4 +1,5 @@
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,8 @@ import 'finish_line_component.dart';
 import 'tap_obstacle_component.dart';
 import 'slide_obstacle_component.dart';
 
-// استخدام الميكسات الحديثة المعتمدة لدى المترجم السحابي حالياً
-class OpenThePathGame extends FlameGame with HasCollisionDetection, HasTappableComponents, HasDraggableComponents {
+// استخدام الهيكلية القياسية المطلقة المعتمدة سحابياً 
+class OpenThePathGame extends FlameGame with HasCollisionDetection, HasTappables, HasDraggables {
   late PlayerComponent player;
   late FinishLineComponent finishLine;
 
