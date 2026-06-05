@@ -1,12 +1,11 @@
-import 'dart:ui'; // استيراد ضروري جداً لتشغيل مرشح النيون الحديث
+import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/events.dart';
-import 'package:flutter/material.dart' hide ImageFilter; // منع التعارض بين الحزم
+import 'package:flutter/material.dart' hide ImageFilter;
 import 'open_the_path_game.dart';
 import 'player_component.dart';
 
-class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, TapCallbacks {
+class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, Tappable {
   int clicksLeft = 3;
 
   TapObstacleComponent({
@@ -21,13 +20,12 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
   }
 
   @override
-  void onTapDown(TapDownEvent event) {
-    super.onTapDown(event);
+  bool onTapDown(TapDownInfo info) {
     clicksLeft--;
-
     if (clicksLeft <= 0) {
       removeFromParent();
     }
+    return true;
   }
 
   @override
@@ -55,7 +53,6 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
-    // الحل النهائي والذكي لفلتر النيون بدون أخطاء تجميع
     final glowPaint = Paint()
       ..color = color.withOpacity(0.4)
       ..imageFilter = ImageFilter.blur(sigmaX: 15, sigmaY: 15);
