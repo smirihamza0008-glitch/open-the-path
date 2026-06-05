@@ -1,12 +1,12 @@
 import 'dart:ui' as ui;
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/events.dart'; // حزمة الأحداث الحديثة المطلوبة سحابياً
+import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'open_the_path_game.dart';
 import 'player_component.dart';
 
-class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, TapCallbacks {
+class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePathGame>, CollisionCallbacks, Tappable {
   int clicksLeft = 3;
 
   TapObstacleComponent({
@@ -20,14 +20,13 @@ class TapObstacleComponent extends PositionComponent with HasGameRef<OpenThePath
     add(RectangleHitbox());
   }
 
-  // تحديث المعامل إلى نوع Event الحديث لمحاكاة المترجم بنجاح
   @override
-  void onTapDown(TapDownEvent event) {
+  bool onTapDown(TapDownInfo info) {
     clicksLeft--;
     if (clicksLeft <= 0) {
       removeFromParent();
     }
-    event.handled = true;
+    return true;
   }
 
   @override
